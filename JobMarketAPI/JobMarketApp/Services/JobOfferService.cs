@@ -2,7 +2,6 @@
 using JobMarketApp.API.DTO.JobOffers;
 using JobMarketApp.API.DTO.Jobs;
 using JobMarketApp.Persistence.Models;
-using JobMarketApp.Persistence.Repositories;
 using JobMarketApp.Persistence.Repositories.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using System.ComponentModel.DataAnnotations;
@@ -30,9 +29,9 @@ namespace JobMarketApp.API.Services
             _jobRepository = jobRepository;
         }
 
-        public async Task<List<JobOfferDto>> GetAllAsync()
+        public async Task<List<JobOfferDto>> GetPaginatedAsync(int page, int pageSize)
         {
-            var result = await _jobOfferRepository.GetAllAsync();
+            var result = await _jobOfferRepository.GetPaginatedAsync(page, pageSize);
             return _mapper.Map<List<JobOfferDto>>(result);
         }
 
@@ -43,19 +42,23 @@ namespace JobMarketApp.API.Services
             if (_cache.TryGetValue(cacheKey, out JobOfferDto? cached))
                 return cached;
 
-            var result = await _jobOfferRepository.GetByIdAsync(id);
-
-            if (result is null)
+            var entity = await _jobOfferRepository.GetByIdAsync(id);
+            if (entity is null)
                 return null;
 
-            // MemoryCache
-            _cache.Set(cacheKey, result, new MemoryCacheEntryOptions
-            {
-                SlidingExpiration = TimeSpan.FromMinutes(10),
-                Size = 1
-            });
+            var dto = _mapper.Map<JobOfferDto>(entity);
 
-            return _mapper.Map<JobOfferDto>(result);
+            //Memorycaching
+            var options = new MemoryCacheEntryOptions
+            {
+                SlidingExpiration = TimeSpan.FromMinutes(20),
+                Size = 1,
+                Priority = CacheItemPriority.High
+            };
+
+            _cache.Set(cacheKey, dto, options);
+
+            return dto;
         }
 
         public async Task<JobOfferDto> CreateAsync(CreateJobOfferDto dto)

@@ -13,33 +13,6 @@ namespace JobMarketApp.Persistence.Repositories
             _dbConnectionFactory = dbConnectionFactory;
         }
 
-        public async Task<Customer> CreateAsync(Customer customer)
-        {
-            using var connection = _dbConnectionFactory.CreateConnection();
-
-            const string sql = @"
-                INSERT INTO Customers (FirstName, LastName)
-                OUTPUT INSERTED.Id, INSERTED.FirstName, INSERTED.LastName
-                VALUES (@FirstName, @LastName);
-            ";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@FirstName", customer.FirstName);
-            parameters.Add("@LastName", customer.LastName);
-
-            return await connection.QuerySingleAsync<Customer>(sql, parameters);
-        }
-
-        public async Task<List<Customer>> GetAllAsync()
-        {
-            using var connection = _dbConnectionFactory.CreateConnection();
-
-            const string sql = @"SELECT * FROM Customers";
-
-            var result = await connection.QueryAsync<Customer>(sql);
-            return result.ToList();
-        }
-
         public async Task<Customer?> GetByIdAsync(Guid id)
         {
             using var connection = _dbConnectionFactory.CreateConnection();
@@ -103,43 +76,6 @@ namespace JobMarketApp.Persistence.Repositories
 
             var result = await connection.QueryAsync<Customer>(sql, parameters);
             return result.Cast<Customer?>().ToList();
-        }
-
-        public async Task<Customer> UpdateAsync(Customer customer)
-        {
-            using var connection = _dbConnectionFactory.CreateConnection();
-
-            const string sql = @"
-                UPDATE Customers
-                SET FirstName = @FirstName,
-                    LastName = @LastName
-                WHERE Id = @Id;
-
-                SELECT *
-                FROM Customers
-                WHERE Id = @Id;
-            ";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@Id", customer.Id);
-            parameters.Add("@FirstName", customer.FirstName);
-            parameters.Add("@LastName", customer.LastName);
-
-            return await connection.QuerySingleAsync<Customer>(sql, parameters);
-        }
-        public async Task DeleteAsync(Guid id)
-        {
-            using var connection = _dbConnectionFactory.CreateConnection();
-
-            const string sql = @"
-                DELETE FROM Customers
-                WHERE Id = @Id;
-            ";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@Id", id);
-
-            await connection.ExecuteAsync(sql, parameters);
         }
     }
 }

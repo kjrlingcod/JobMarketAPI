@@ -27,9 +27,9 @@ namespace JobMarketApp.API.Services
             _contractorRepository = contractorRepository;
         }
 
-        public async Task<List<JobDto>> GetAllAsync()
+        public async Task<List<JobDto>> GetPaginatedAsync(int page, int pageSize)
         {
-            var result = await _jobRepository.GetAllAsync();
+            var result = await _jobRepository.GetPaginatedAsync(page, pageSize);
             return _mapper.Map<List<JobDto>>(result);
         }
 
@@ -40,19 +40,23 @@ namespace JobMarketApp.API.Services
             if (_cache.TryGetValue(cacheKey, out JobDto? cached))
                 return cached;
 
-            var result = await _jobRepository.GetByIdAsync(id);
-
-            if (result is null)
+            var entity = await _jobRepository.GetByIdAsync(id);
+            if (entity is null)
                 return null;
 
-            // MemoryCache
-            _cache.Set(cacheKey, result, new MemoryCacheEntryOptions
-            {
-                SlidingExpiration = TimeSpan.FromMinutes(10),
-                Size = 1
-            });
+            var dto = _mapper.Map<JobDto>(entity);
 
-            return _mapper.Map<JobDto>(result);
+            //Memorycaching
+            var options = new MemoryCacheEntryOptions
+            {
+                SlidingExpiration = TimeSpan.FromMinutes(20),
+                Size = 1,
+                Priority = CacheItemPriority.High
+            };
+
+            _cache.Set(cacheKey, dto, options);
+
+            return dto;
         }
 
         public async Task<JobDto> CreateAsync(CreateJobDto dto)

@@ -4,8 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JobMarketApp.API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     public class JobOffersController : BaseController
     {
         private readonly IJobOfferService _jobOffersService;
@@ -14,10 +12,10 @@ namespace JobMarketApp.API.Controllers
             _jobOffersService = jobOffersService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetAllAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+        [HttpGet("paginated")]
+        public async Task<IActionResult> GetPaginatedAsync([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
         {
-            var jobOffers = await _jobOffersService.GetAllAsync();
+            var jobOffers = await _jobOffersService.GetPaginatedAsync(page, pageSize);
             return Ok(jobOffers);
         }
 

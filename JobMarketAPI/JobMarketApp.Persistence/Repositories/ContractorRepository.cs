@@ -12,49 +12,6 @@ namespace JobMarketApp.Persistence.Repositories
         {
             _dbConnectionFactory = dbConnectionFactory;
         }
-
-        public async Task<Contractor> CreateAsync(Contractor contractor)
-        {
-            using var connection = _dbConnectionFactory.CreateConnection();
-
-            const string sql = @"
-                INSERT INTO Contractors (Name, Rating)
-                OUTPUT INSERTED.Id, INSERTED.Name, INSERTED.Rating
-                VALUES (@Name, @Rating);
-            ";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@Name", contractor.Name);
-            parameters.Add("@Rating", contractor.Rating);
-
-            return await connection.QuerySingleAsync<Contractor>(sql, parameters);
-        }
-
-        public async Task DeleteAsync(Guid id)
-        {
-            using var connection = _dbConnectionFactory.CreateConnection();
-
-            const string sql = @"
-                DELETE FROM Contractors
-                WHERE Id = @Id;
-            ";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@Id", id);
-
-            await connection.ExecuteAsync(sql, parameters);
-        }
-
-        public async Task<List<Contractor>> GetAllAsync()
-        {
-            using var connection = _dbConnectionFactory.CreateConnection();
-
-            const string sql = @"SELECT Id, Name, Rating FROM Contractors";
-
-            var result = await connection.QueryAsync<Contractor>(sql);
-            return result.ToList();
-        }
-
         public async Task<Contractor?> GetByIdAsync(Guid id)
         {
             using var connection = _dbConnectionFactory.CreateConnection();
@@ -117,29 +74,6 @@ namespace JobMarketApp.Persistence.Repositories
 
             var result = await connection.QueryAsync<Contractor>(sql, parameters);
             return result.Cast<Contractor?>().ToList();
-        }
-
-        public async Task<Contractor> UpdateAsync(Contractor contractor)
-        {
-            using var connection = _dbConnectionFactory.CreateConnection();
-
-            const string sql = @"
-                UPDATE Contractors
-                SET Name = @Name,
-                    Rating = @Rating
-                WHERE Id = @Id;
-
-                SELECT Id, Name, Rating
-                FROM Contractors
-                WHERE Id = @Id;
-            ";
-
-            var parameters = new DynamicParameters();
-            parameters.Add("@Id", contractor.Id);
-            parameters.Add("@Name", contractor.Name);
-            parameters.Add("@Rating", contractor.Rating);
-
-            return await connection.QuerySingleAsync<Contractor>(sql, parameters);
         }
     }
 }

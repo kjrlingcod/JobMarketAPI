@@ -4,7 +4,7 @@ namespace JobMarketApp.Persistence.Repositories.Interfaces
 {
     public interface IJobRepository
     {
-        Task<List<Job>> GetAllAsync();
+        Task<List<Job>> GetPaginatedAsync(int page, int pageSize);
         Task<Job> GetByIdAsync(Guid Id);
         Task<Job> CreateAsync(Job job);
         Task<Job> UpdateAsync(Job job);

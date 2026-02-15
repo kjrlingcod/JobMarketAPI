@@ -31,16 +31,23 @@ namespace JobMarketApp.Persistence.Repositories
             return await connection.QuerySingleAsync<JobOffer>(sql, parameters);
         }
 
-        public async Task<List<JobOffer>> GetAllAsync()
+        public async Task<List<JobOffer>> GetPaginatedAsync(int page, int pageSize)
         {
             using var connection = _dbConnectionFactory.CreateConnection();
 
-            const string sql = @"SELECT * FROM JobOffers
-                OFFSET @Offset ROWS 
+            const string sql = @"
+                SELECT *
+                FROM JobOffers
+                ORDER BY Id
+                OFFSET @Offset ROWS
                 FETCH NEXT @PageSize ROWS ONLY;
             ";
 
-            var result = await connection.QueryAsync<JobOffer>(sql);
+            var parameters = new DynamicParameters();
+            parameters.Add("@Offset", (page - 1) * pageSize);
+            parameters.Add("@PageSize", pageSize);
+
+            var result = await connection.QueryAsync<JobOffer>(sql, parameters);
             return result.ToList();
         }
 

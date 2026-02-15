@@ -1,8 +1,9 @@
-﻿using JobMarketApp.API.DTO.Jobs;
+﻿using JobMarketApp.API.DTO.JobOffers;
+using JobMarketApp.API.DTO.Jobs;
 
 public interface IJobService
 {
-    Task<List<JobDto>> GetAllAsync();
+    Task<List<JobDto>> GetPaginatedAsync(int page, int pageSize);
     Task<JobDto?> GetByIdAsync(Guid id);
     Task<JobDto> CreateAsync(CreateJobDto dto);
     Task<JobDto?> UpdateAsync(Guid id, UpdateJobDto jobDto);

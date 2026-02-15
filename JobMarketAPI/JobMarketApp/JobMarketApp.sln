@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36908.2 d17.14
+VisualStudioVersion = 17.14.36908.2
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobMarketApp.API", "JobMarketApp.API.csproj", "{992D95C3-21C7-4582-87DC-1E7B216FDA2C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobMarketApp.Persistence", "..\JobMarketApp.Persistence\JobMarketApp.Persistence.csproj", "{CDE9AFF8-DD1F-452C-BB55-AD24A31A06DF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JobMarketApp.Tests", "..\JobMarketApp.Tests\JobMarketApp.Tests.csproj", "{EDE114F9-9929-40DE-A4F9-C44347D6F203}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{CDE9AFF8-DD1F-452C-BB55-AD24A31A06DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CDE9AFF8-DD1F-452C-BB55-AD24A31A06DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CDE9AFF8-DD1F-452C-BB55-AD24A31A06DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDE114F9-9929-40DE-A4F9-C44347D6F203}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDE114F9-9929-40DE-A4F9-C44347D6F203}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDE114F9-9929-40DE-A4F9-C44347D6F203}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDE114F9-9929-40DE-A4F9-C44347D6F203}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
