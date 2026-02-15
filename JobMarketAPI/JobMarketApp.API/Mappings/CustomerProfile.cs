@@ -10,8 +10,8 @@ namespace JobMarketApp.API.Mappings
         {
             CreateMap<Contractor, ContractorDto>().ReverseMap();
 
-            CreateMap<CreateContractorDto, Contractor>();
-            CreateMap<UpdateContractorDto, Contractor>();
+            //CreateMap<CreateContractorDto, Contractor>();
+            //CreateMap<UpdateContractorDto, Contractor>();
         }
     }
 }

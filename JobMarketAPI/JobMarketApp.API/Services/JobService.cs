@@ -79,10 +79,6 @@ namespace JobMarketApp.API.Services
             if (jobDto.DueDate < jobDto.StartDate)
                 throw new ArgumentException("DueDate must be on/after StartDate.");
 
-            var existingCustomer = await _customerRepository.GetByIdAsync(jobDto.CustomerId);
-            if (existingCustomer == null)
-                throw new ArgumentException("CustomerId does not exist.");
-
             var existing = await _jobRepository.GetByIdAsync(id);
             if (existing is null)
                 return null;

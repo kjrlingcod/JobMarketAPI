@@ -225,7 +225,6 @@ public class JobServiceTests
 
         var dto = new UpdateJobDto
         {
-            CustomerId = Guid.NewGuid(),
             StartDate = DateTime.UtcNow.Date,
             DueDate = DateTime.UtcNow.Date.AddDays(-1) // invalid
         };
@@ -241,32 +240,6 @@ public class JobServiceTests
     }
 
     [Fact]
-    public async Task UpdateAsync_WhenCustomerDoesNotExist_ThrowsArgumentException()
-    {
-        // Arrange
-        var id = Guid.NewGuid();
-
-        var dto = new UpdateJobDto
-        {
-            CustomerId = Guid.NewGuid(),
-            StartDate = DateTime.UtcNow.Date,
-            DueDate = DateTime.UtcNow.Date.AddDays(1)
-        };
-
-        _customerRepo.Setup(r => r.GetByIdAsync(dto.CustomerId))
-                     .ReturnsAsync((Customer?)null);
-
-        var sut = CreateSut();
-
-        // Act + Assert
-        var ex = await Assert.ThrowsAsync<ArgumentException>(() => sut.UpdateAsync(id, dto));
-        Assert.Equal("CustomerId does not exist.", ex.Message);
-
-        _jobRepo.Verify(r => r.GetByIdAsync(It.IsAny<Guid>()), Times.Never);
-        _jobRepo.Verify(r => r.UpdateAsync(It.IsAny<Job>()), Times.Never);
-    }
-
-    [Fact]
     public async Task UpdateAsync_WhenJobNotFound_ReturnsNull()
     {
         // Arrange
@@ -274,15 +247,11 @@ public class JobServiceTests
 
         var dto = new UpdateJobDto
         {
-            CustomerId = Guid.NewGuid(),
             StartDate = DateTime.UtcNow.Date,
             DueDate = DateTime.UtcNow.Date.AddDays(1),
             Budget = 500,
             Description = "Update"
         };
-
-        _customerRepo.Setup(r => r.GetByIdAsync(dto.CustomerId))
-                     .ReturnsAsync(new Customer { Id = dto.CustomerId });
 
         _jobRepo.Setup(r => r.GetByIdAsync(id))
                .ReturnsAsync((Job?)null);
@@ -305,22 +274,20 @@ public class JobServiceTests
 
         var dto = new UpdateJobDto
         {
-            CustomerId = Guid.NewGuid(),
             StartDate = DateTime.UtcNow.Date,
             DueDate = DateTime.UtcNow.Date.AddDays(1),
             Budget = 500,
             Description = "Update"
         };
 
-        _customerRepo.Setup(r => r.GetByIdAsync(dto.CustomerId))
-                     .ReturnsAsync(new Customer { Id = dto.CustomerId });
-
         _jobRepo.Setup(r => r.GetByIdAsync(id))
                .ReturnsAsync(new Job { Id = id });
 
-        var mappedEntity = new Job { CustomerId = dto.CustomerId };
-        var updatedEntity = new Job { Id = id, CustomerId = dto.CustomerId };
+
+        var mappedEntity = new Job();      
+        var updatedEntity = new Job { Id = id };
         var mappedDto = new JobDto { Id = id };
+
 
         _mapper.Setup(m => m.Map<Job>(dto)).Returns(mappedEntity);
         _jobRepo.Setup(r => r.UpdateAsync(It.Is<Job>(j => j.Id == id)))

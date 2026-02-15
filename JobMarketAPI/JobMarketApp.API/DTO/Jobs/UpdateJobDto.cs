@@ -5,8 +5,6 @@ namespace JobMarketApp.API.DTO.Jobs
     public class UpdateJobDto
     {
         [Required]
-        public Guid CustomerId { get; set; }
-        [Required]
         public DateTime StartDate { get; set; }
         [Required]
         public DateTime DueDate { get; set; }

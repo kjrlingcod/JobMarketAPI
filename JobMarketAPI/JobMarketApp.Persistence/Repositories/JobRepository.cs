@@ -77,7 +77,8 @@ namespace JobMarketApp.Persistence.Repositories
                 SET StartDate = @StartDate,
                 DueDate = @DueDate,
                 Budget = @Budget,
-                Description = @Description
+                Description = @Description,
+                AcceptedBy = @AcceptedBy
                 WHERE Id = @Id;
 
                 SELECT *
@@ -91,6 +92,7 @@ namespace JobMarketApp.Persistence.Repositories
             parameters.Add("@DueDate", jobOffer.DueDate);
             parameters.Add("@Budget", jobOffer.Budget);
             parameters.Add("@Description", jobOffer.Description);
+            parameters.Add("@AcceptedBy", jobOffer.AcceptedBy);
 
             return await connection.QuerySingleAsync<Job>(sql, parameters);
         }

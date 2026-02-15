@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\JobMarketApp.API\JobMarketApp.API.csproj" />
     <ProjectReference Include="..\JobMarketApp.Persistence\JobMarketApp.Persistence.csproj" />
     <ProjectReference Include="..\JobMarketApp\JobMarketApp.API.csproj" />
   </ItemGroup>
