@@ -62,6 +62,6 @@ Example:
 
 ---
 
-Visual Studio
-Open the solution in Visual Studio and click the **https** run button.
+### Run using Visual Studio
+Open the solution in Visual Studio and click the **https** run button.  
 Swagger will open automatically.
