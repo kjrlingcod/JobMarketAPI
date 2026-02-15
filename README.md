@@ -62,8 +62,6 @@ Example:
 
 ---
 
-### Run the API
-From the solution root directory:
-
-```bash
-dotnet run --project JobMarketApp.API
+Visual Studio
+Open the solution in Visual Studio and click the **https** run button.
+Swagger will open automatically.
